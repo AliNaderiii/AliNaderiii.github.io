@@ -132,7 +132,7 @@
       event.preventDefault();
       var note = document.getElementById('formNote');
       if (note) {
-        note.textContent = 'Thanks — your message is ready. Reach me directly at alinaderi1@gmail.com.';
+        note.textContent = 'Thanks — your message is ready. Reach me directly at alinaderi119@gmail.com.';
       }
       form.reset();
     });

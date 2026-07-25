@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio – Ali Naderi | Industrial AI & Predictive Maintenance</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08121C;
+  --bg-card: #0C1A26;
+  --bg-card2: #0F2030;
+  --cyan: #00D4FF;
+  --cyan-d: rgba(0,212,255,0.12);
+  --amber: #FFA827;
+  --amber-d: rgba(255,168,39,0.12);
+  --green: #00E676;
+  --green-d: rgba(0,230,118,0.12);
+  --text1: #E8F4FF;
+  --text2: #7FA8C9;
+  --text3: #3D6480;
+  --border: rgba(0,212,255,0.10);
+  --border-h: rgba(0,212,255,0.35);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text1);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+.d  { font-family: 'Space Grotesk', sans-serif; }
+.m  { font-family: 'JetBrains Mono', monospace; }
+
+/* ── HEADER ── */
+.hdr {
+  background: linear-gradient(160deg,#04101A 0%,#091B2A 60%,#050F18 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 44px 0;
+  overflow: hidden;
+  position: relative;
+}
+.hdr-top { display:flex; align-items:flex-start; justify-content:space-between; gap:28px; flex-wrap:wrap; }
+
+.badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--amber-d); border:1px solid rgba(255,168,39,.28);
+  color:var(--amber); padding:4px 12px; border-radius:20px;
+  font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase;
+  margin-bottom:14px;
+}
+.bdot { width:6px;height:6px;background:var(--amber);border-radius:50%;animation:blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+h1 { font-family:'Space Grotesk',sans-serif; font-size:clamp(22px,3vw,32px); font-weight:700; line-height:1.18; color:var(--text1); max-width:520px; margin-bottom:12px; }
+h1 span { color:var(--cyan); }
+.sub { color:var(--text2); font-size:13.5px; line-height:1.65; max-width:460px; }
+
+.ablock { text-align:right; flex-shrink:0; }
+.aname  { font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:600; }
+.aaffil { font-size:12px; color:var(--text2); margin-top:5px; line-height:1.55; }
+.jpill  {
+  display:inline-flex; align-items:center; gap:5px; margin-top:10px;
+  background:var(--cyan-d); border:1px solid var(--border); padding:5px 11px;
+  border-radius:6px; font-size:11px; color:var(--cyan); font-weight:500;
+}
+
+/* ── CANVAS ── */
+.cwrap { margin-top:32px; position:relative; height:88px; }
+canvas { width:100%; height:88px; display:block; }
+.clabel {
+  position:absolute; right:0; top:6px;
+  font-family:'JetBrains Mono',monospace; font-size:10px;
+  color:var(--text3); letter-spacing:.5px;
+}
+
+/* ── BODY ── */
+.body { padding:32px 44px; max-width:1060px; }
+
+/* section title */
+.stitle {
+  font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:600;
+  letter-spacing:1.6px; text-transform:uppercase; color:var(--cyan);
+  margin-bottom:16px; display:flex; align-items:center; gap:10px;
+}
+.stitle::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ── METRICS ── */
+.mgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:11px; margin-bottom:32px; }
+.mc {
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:10px; padding:18px 18px 16px; position:relative;
+  overflow:hidden; transition:border-color .2s,transform .18s;
+}
+.mc:hover { border-color:var(--border-h); transform:translateY(-2px); }
+.mc::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; background:var(--cyan); opacity:.65; }
+.mc.a::before { background:var(--amber); }
+.mc.g::before { background:var(--green); }
+.ml { font-size:10.5px; color:var(--text3); font-weight:500; text-transform:uppercase; letter-spacing:.6px; margin-bottom:9px; }
+.mv { font-family:'JetBrains Mono',monospace; font-size:27px; font-weight:600; color:var(--cyan); line-height:1; }
+.mc.a .mv { color:var(--amber); }
+.mc.g .mv { color:var(--green); }
+.ms { font-size:11px; color:var(--text2); margin-top:6px; }
+
+/* ── BENCHMARKS ── */
+.bgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:10px; margin-bottom:32px; }
+.bi {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:8px;
+  padding:13px 15px; display:flex; align-items:center; gap:11px;
+  transition:border-color .2s;
+}
+.bi:hover { border-color:var(--border-h); }
+.bico {
+  width:34px; height:34px; background:var(--cyan-d); border-radius:7px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600;
+  color:var(--cyan); flex-shrink:0;
+}
+.bn { font-size:13px; font-weight:600; }
+.bd { font-size:11px; color:var(--text2); margin-top:2px; }
+
+/* ── SKILLS ── */
+.swrap { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:32px; }
+.sk {
+  background:var(--bg-card); border:1px solid var(--border);
+  color:var(--text2); padding:5px 13px; border-radius:20px;
+  font-size:12px; font-weight:500; transition:all .18s; cursor:default;
+}
+.sk:hover { border-color:var(--cyan); color:var(--cyan); }
+.sk.h { background:var(--cyan-d); border-color:rgba(0,212,255,.28); color:var(--cyan); }
+
+/* ── DIVIDER ── */
+.div { height:1px; background:var(--border); margin:28px 0; }
+
+/* ── COPY SECTIONS ── */
+.cs {
+  background:#040C14; border:1px solid var(--border);
+  border-radius:12px; padding:22px 24px; margin-bottom:16px;
+}
+.csh { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.csl {
+  font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700;
+  text-transform:uppercase; letter-spacing:1px; color:var(--amber);
+}
+.cbtn {
+  background:var(--amber-d); border:1px solid rgba(255,168,39,.28);
+  color:var(--amber); padding:4px 13px; border-radius:6px;
+  font-size:11px; font-weight:600; cursor:pointer;
+  font-family:'Inter',sans-serif; transition:all .18s;
+}
+.cbtn:hover { background:rgba(255,168,39,.22); }
+.cbtn.ok { background:var(--green-d); border-color:rgba(0,230,118,.35); color:var(--green); }
+.ct { color:var(--text2); font-size:13px; line-height:1.72; white-space:pre-wrap; }
+.ct.m { font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6; }
+
+/* ── FOOTER ── */
+.footer {
+  border-top:1px solid var(--border); padding:20px 44px;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+}
+.ftxt { font-size:11.5px; color:var(--text3); }
+.fmark { font-size:11px; color:var(--text3); font-family:'JetBrains Mono',monospace; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <div class="badge"><span class="bdot"></span> Research Under Review · Elsevier Q1 · 2025</div>
+      <h1 class="d">Industrial AI for<br><span>Bearing Fault Diagnosis</span><br>under Extreme Noise</h1>
+      <p class="sub">Physics-informed deep learning for real-time predictive maintenance on wind turbines and industrial drivetrains — validated on five international benchmarks.</p>
+    </div>
+    <div class="ablock">
+      <div class="aname d">Ali Naderi</div>
+      <div class="aaffil">Mechatronics Engineering<br>Urmia University of Technology<br>Urmia, Iran</div>
+      <div class="jpill">📄 Int. Journal of Machine Tools &amp; Manufacture</div>
+    </div>
+  </div>
+  <div class="cwrap">
+    <canvas id="cv"></canvas>
+    <div class="clabel">VIBRATION SIGNAL — AUTOMATED FAULT DETECTION</div>
+  </div>
+</div>
+
+<!-- ══════════ BODY ══════════ -->
+<div class="body">
+
+  <!-- Metrics -->
+  <div class="stitle">Key Results</div>
+  <div class="mgrid">
+    <div class="mc g">
+      <div class="ml">IMS Run-to-Failure</div>
+      <div class="mv">99.98%</div>
+      <div class="ms">Accuracy on real fatigue data</div>
+    </div>
+    <div class="mc">
+      <div class="ml">Paderborn (Real Faults)</div>
+      <div class="mv">99.03%</div>
+      <div class="ms">Calibration: ECE = 0.0047</div>
+    </div>
+    <div class="mc">
+      <div class="ml">Extreme Noise − 10 dB SNR</div>
+      <div class="mv">99.72%</div>
+      <div class="ms">NREL wind turbine gearbox</div>
+    </div>
+    <div class="mc a">
+      <div class="ml">Inference Speed</div>
+      <div class="mv">8.5ms</div>
+      <div class="ms">Edge-deployable · 3.21 GFLOPs</div>
+    </div>
+    <div class="mc a">
+      <div class="ml">Model Parameters</div>
+      <div class="mv">1.4M</div>
+      <div class="ms">Only ≈5.4 MB memory footprint</div>
+    </div>
+    <div class="mc">
+      <div class="ml">Benchmarks Validated</div>
+      <div class="mv">5 ×</div>
+      <div class="ms">CWRU, SDUST, IMS, Paderborn, NREL</div>
+    </div>
+  </div>
+
+  <!-- Benchmarks -->
+  <div class="stitle">Validated Benchmarks</div>
+  <div class="bgrid">
+    <div class="bi"><div class="bico">CW</div><div><div class="bn">CWRU</div><div class="bd">Case Western — Lab standard</div></div></div>
+    <div class="bi"><div class="bico">SD</div><div><div class="bn">SDUST</div><div class="bd">Variable severity & load profiles</div></div></div>
+    <div class="bi"><div class="bico">IMS</div><div><div class="bn">IMS</div><div class="bd">Run-to-failure, natural degradation</div></div></div>
+    <div class="bi"><div class="bico">PB</div><div><div class="bn">Paderborn</div><div class="bd">Real fatigue damage bearings</div></div></div>
+    <div class="bi"><div class="bico">NR</div><div><div class="bn">NREL</div><div class="bd">Utility-scale wind turbine gearbox</div></div></div>
+  </div>
+
+  <!-- Skills -->
+  <div class="stitle">Skills & Technologies Demonstrated</div>
+  <div class="swrap">
+    <span class="sk h">Physics-Informed Deep Learning</span>
+    <span class="sk h">Transformer Architectures</span>
+    <span class="sk h">Signal Processing</span>
+    <span class="sk h">Predictive Maintenance</span>
+    <span class="sk">PyTorch</span>
+    <span class="sk">Python</span>
+    <span class="sk">1D Convolutional Neural Networks</span>
+    <span class="sk">Nonlinear Feature Extraction</span>
+    <span class="sk">Noise-Robust Machine Learning</span>
+    <span class="sk">Edge AI / Embedded Deployment</span>
+    <span class="sk">Bearing Fault Diagnosis</span>
+    <span class="sk">Vibration Analysis</span>
+    <span class="sk">Industrial IoT</span>
+    <span class="sk">Scientific Writing &amp; LaTeX</span>
+    <span class="sk">Condition Monitoring</span>
+    <span class="sk">Bayesian Uncertainty Estimation</span>
+    <span class="sk">Multi-Sensor Fusion</span>
+    <span class="sk">Wind Turbine Diagnostics</span>
+  </div>
+
+  <div class="div"></div>
+
+  <!-- ── UPWORK COPY ── -->
+  <div class="stitle">Ready-to-Use Upwork Copy</div>
+
+  <!-- Headline -->
+  <div class="cs">
+    <div class="csh">
+      <div class="csl">🏷 Upwork Headline</div>
+      <button class="cbtn" onclick="cp(this,'headline')">Copy</button>
+    </div>
+    <div class="ct" id="headline">Industrial AI Researcher | Physics-Informed Deep Learning | Predictive Maintenance & Fault Diagnosis</div>
+  </div>
+
+  <!-- Bio -->
+  <div class="cs">
+    <div class="csh">
+      <div class="csl">👤 Profile Overview / Bio</div>
+      <button class="cbtn" onclick="cp(this,'bio')">Copy</button>
+    </div>
+    <div class="ct" id="bio">I am an AI/ML researcher specializing in physics-informed deep learning for industrial condition monitoring, predictive maintenance, and signal-based fault diagnosis. My work sits at the intersection of classical signal processing and modern neural architectures, with a focus on real-world reliability under harsh industrial conditions.
+
+My most recent research introduces a novel deep learning framework for bearing fault diagnosis that outperforms state-of-the-art baselines across five public benchmarks — including CWRU, IMS run-to-failure, Paderborn real fatigue data, and the NREL utility-scale wind turbine gearbox dataset — achieving up to 99.98% accuracy and remaining robust even at extreme −10 dB Signal-to-Noise Ratio conditions. The architecture is specifically engineered for edge deployment, with only 1.4M parameters and ≈8.5 ms inference latency. This work has been submitted to the International Journal of Machine Tools and Manufacture (Elsevier Q1).
+
+What I bring to your project:
+✔ End-to-end deep learning pipeline: data → model → edge deployment
+✔ Strong signal processing expertise (vibration, time-series, spectral analysis)
+✔ Physics-informed model design that generalizes beyond the lab
+✔ Rigorous, leakage-free evaluation with multi-trial statistical reporting
+✔ Clean, reproducible PyTorch code with LaTeX-ready scientific documentation
+✔ Hands-on experience with publicly recognized international benchmarks (CWRU, IMS, Paderborn, NREL)</div>
+  </div>
+
+  <!-- Portfolio Item -->
+  <div class="cs">
+    <div class="csh">
+      <div class="csl">🗂 Portfolio Item Description</div>
+      <button class="cbtn" onclick="cp(this,'portfolio')">Copy</button>
+    </div>
+    <div class="ct" id="portfolio">Project: Physics-Informed Deep Learning for Industrial Bearing Fault Diagnosis
+Domain: Predictive Maintenance · Condition Monitoring · Wind Energy
+Status: Submitted to International Journal of Machine Tools and Manufacture (Elsevier Q1, 2025)
+
+Overview:
+Designed and implemented a novel deep learning framework (PhyQ-TransNet) for automated bearing fault detection in noisy, real-world industrial environments. The architecture combines a physics-informed nonlinear feature extractor with a Transformer encoder and a statistical uncertainty module — engineered to remain reliable at Signal-to-Noise Ratios where conventional CNN models fail.
+
+Key Achievements:
+• 99.98% accuracy on the IMS run-to-failure benchmark (real natural degradation data)
+• 99.03% accuracy on Paderborn real fatigue damage data (calibration ECE = 0.0047)
+• 99.72% accuracy at extreme −10 dB SNR on the NREL wind turbine gearbox dataset
+• Validated on 5 independent public benchmarks with a strict leakage-free chronological protocol
+• Edge-deployable: 1.40M parameters · 3.21 GFLOPs · ~8.5 ms inference latency (~117 FPS)
+
+Methodology highlights:
+• Physics-informed design: the model is structured to mirror physical signal demodulation — no black-box approach
+• Dual-stream architecture fusing deep feature learning with robust statistical priors
+• Noise resilience: performance validated under Gaussian noise 10× stronger than the fault signal
+• Multi-sensor fusion: synchronous data from three accelerometers per experiment
+
+Tech Stack: Python · PyTorch · Signal Processing · Transformer Encoder · Physics-Informed ML
+Affiliation: Mechatronics Engineering, Urmia University of Technology, Iran</div>
+  </div>
+
+  <!-- Skills Tags -->
+  <div class="cs">
+    <div class="csh">
+      <div class="csl">🏷 Upwork Skills Tags</div>
+      <button class="cbtn" onclick="cp(this,'tags')">Copy</button>
+    </div>
+    <div class="ct m" id="tags">Deep Learning · PyTorch · Signal Processing · Predictive Maintenance · Python · Machine Learning · Fault Detection · Time Series Analysis · Physics-Informed Neural Networks · Edge AI · Industrial IoT · Scientific Writing · LaTeX · Vibration Analysis · Condition Monitoring · Transformer Architecture · Wind Turbine Diagnostics</div>
+  </div>
+
+  <!-- Cover Letter Snippet -->
+  <div class="cs">
+    <div class="csh">
+      <div class="csl">✉ Cover Letter Snippet (for proposals)</div>
+      <button class="cbtn" onclick="cp(this,'cover')">Copy</button>
+    </div>
+    <div class="ct" id="cover">I have hands-on research experience building and validating deep learning systems for industrial fault diagnosis under real-world noise conditions. My recent work — currently under review at an Elsevier Q1 journal — demonstrates state-of-the-art performance on five internationally recognized bearing and gearbox benchmarks, including the NREL wind turbine dataset at −10 dB SNR. The resulting model runs in under 9 ms per inference and fits within 5.4 MB of memory, making it suitable for edge deployment on industrial controllers. I approach every project with the same rigor: physics-informed design, leakage-free evaluation, and reproducible code.</div>
+  </div>
+
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<div class="footer">
+  <div class="ftxt">Ali Naderi · Mechatronics Engineering · Urmia University of Technology</div>
+  <div class="fmark">Portfolio generated with privacy-aware methodology — no IP disclosed</div>
+</div>
+
+<!-- ══════════ SIGNAL CANVAS SCRIPT ══════════ -->
+<script>
+const canvas = document.getElementById('cv');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width  = canvas.parentElement.offsetWidth;
+  canvas.height = 88;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Smooth pseudo-noise using summed sines (no Math.random in draw loop)
+function smoothNoise(x, seed) {
+  return Math.sin(x * 1.7 + seed) * 0.4
+       + Math.sin(x * 3.3 + seed * 1.3) * 0.25
+       + Math.sin(x * 7.1 + seed * 0.7) * 0.15
+       + Math.sin(x * 13  + seed * 2.1) * 0.08;
+}
+
+function sig(t, px, W) {
+  const p = px / W;
+  const base = Math.sin(p * 28 + t * 0.03) * 0.28;
+
+  if (p < 0.35) {
+    // Healthy — smooth
+    return base + smoothNoise(p * 25 + t * 0.05, 1.2) * 0.06;
+  } else if (p < 0.55) {
+    // Transition — increasing noise
+    const ratio = (p - 0.35) / 0.2;
+    return base * (1 - ratio * 0.4) + smoothNoise(p * 40 + t * 0.08, 2.5) * ratio * 0.42;
+  } else if (p < 0.85) {
+    // Fault zone — AM impulse train
+    const fp = (p - 0.55) / 0.3;
+    const positions = [0.07, 0.21, 0.35, 0.49, 0.63, 0.77, 0.91];
+    let impulse = 0;
+    for (const pos of positions) {
+      const d = Math.abs(fp - pos);
+      if (d < 0.05) impulse = Math.sin((1 - d / 0.05) * Math.PI) * (0.75 + Math.sin(t * 0.07) * 0.12);
+    }
+    return base * 0.22 + smoothNoise(p * 35 + t * 0.06, 3.8) * 0.38 + impulse;
+  } else {
+    // Post-detection — stable output
+    return Math.sin(p * 18 + t * 0.03) * 0.1;
+  }
+}
+
+let T = 0;
+function draw() {
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Zone highlights
+  ctx.fillStyle = 'rgba(255,100,60,0.04)';
+  ctx.fillRect(W * 0.55, 0, W * 0.30, H);
+  ctx.fillStyle = 'rgba(0,212,255,0.05)';
+  ctx.fillRect(W * 0.85, 0, W * 0.15, H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(0,212,255,0.06)';
+  ctx.lineWidth = 1;
+  for (let y = 0.25; y < 1; y += 0.25) {
+    ctx.beginPath(); ctx.moveTo(0, H * y); ctx.lineTo(W, H * y); ctx.stroke();
+  }
+  // Center
+  ctx.setLineDash([4, 8]);
+  ctx.strokeStyle = 'rgba(0,212,255,0.09)';
+  ctx.beginPath(); ctx.moveTo(0, H/2); ctx.lineTo(W, H/2); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Zone labels
+  ctx.font = '9px "JetBrains Mono", monospace';
+  ctx.fillStyle = 'rgba(0,230,118,0.55)'; ctx.fillText('HEALTHY', W * 0.02, 13);
+  ctx.fillStyle = 'rgba(255,100,70,0.65)'; ctx.fillText('FAULT ZONE', W * 0.575, 13);
+  ctx.fillStyle = 'rgba(0,212,255,0.80)';  ctx.fillText('DETECTED ✓', W * 0.863, 13);
+
+  // Marker line
+  const mx = W * 0.853;
+  ctx.strokeStyle = 'rgba(0,212,255,0.55)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 4]);
+  ctx.beginPath(); ctx.moveTo(mx, 0); ctx.lineTo(mx, H); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Signal
+  const grad = ctx.createLinearGradient(0, 0, W, 0);
+  grad.addColorStop(0.00, '#00E676');
+  grad.addColorStop(0.35, '#00D4FF');
+  grad.addColorStop(0.47, '#FFAA00');
+  grad.addColorStop(0.55, '#FF5555');
+  grad.addColorStop(0.85, '#FF7777');
+  grad.addColorStop(0.86, '#00D4FF');
+  grad.addColorStop(1.00, '#00D4FF');
+
+  ctx.beginPath();
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 1.6;
+  ctx.shadowBlur = 7;
+  ctx.shadowColor = 'rgba(0,212,255,0.35)';
+
+  const step = 1.5;
+  for (let x = 0; x <= W; x += step) {
+    const y = H/2 - sig(T, x, W) * (H/2 - 11);
+    x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+}
+
+function loop() { T++; draw(); requestAnimationFrame(loop); }
+loop();
+
+// ── Copy helper ──
+function cp(btn, id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 2200);
+  }).catch(() => {
+    // Fallback for environments without clipboard API
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 2200);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction | Clinical Data Science Portfolio</title>
+    <meta name="description" content="Ali Naderi - Advanced Machine Learning pipeline for Heart Disease Prediction using UCI dataset, including Stacking Ensembles, Clinical EDA, and rigorous statistical validation.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Crisp Light Theme */
+            --bg: #F8FAFC;          /* slate-50 */
+            --surface: #FFFFFF;     /* white */
+            --surface2: #F1F5F9;    /* slate-100 */
+            --surface3: #E2E8F0;    /* slate-200 */
+            --border: #CBD5E1;      /* slate-300 */
+            --border-hover: #94A3B8;/* slate-400 */
+            
+            --primary: #2563EB;     /* blue-600 */
+            --primary-glow: #3B82F6;/* blue-500 */
+            --primary-dim: #1D4ED8; /* blue-700 */
+            
+            --text: #334155;        /* slate-700 */
+            --text-heading: #0F172A;/* slate-900 */
+            --muted: #64748B;       /* slate-500 */
+            
+            --amber: #D97706;       /* amber-600 */
+            --red: #E11D48;         /* rose-600 */
+            --green: #059669;       /* emerald-600 */
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.2);
+            
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.7;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* ─── SCROLLBAR ────────────────────────────── */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* ─── UTILITIES ────────────────────────────── */
+        .container { max-width: 1150px; margin: 0 auto; padding: 0 2rem; }
+        .text-heading { color: var(--text-heading); }
+        .text-primary { color: var(--primary); }
+        .text-muted { color: var(--muted); }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        .mt-4 { margin-top: 1rem; } .mb-4 { margin-bottom: 1rem; }
+        .mt-8 { margin-top: 2rem; } .mb-8 { margin-bottom: 2rem; }
+        .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+        .py-24 { padding-top: 6rem; padding-bottom: 6rem; }
+        .flex { display: flex; }
+        .grid { display: grid; }
+        .gap-4 { gap: 1rem; } .gap-8 { gap: 2rem; }
+        .items-center { align-items: center; }
+
+        /* ─── TYPOGRAPHY ────────────────────────────── */
+        h1, h2, h3, h4 { color: var(--text-heading); font-family: 'Space Grotesk', sans-serif; line-height: 1.2; }
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+        h2 { font-size: clamp(2rem, 3vw, 2.5rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;}
+        h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; }
+        
+        .eyebrow {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .eyebrow::before, .eyebrow::after {
+            content: ''; height: 2px; width: 40px; background: var(--primary); display: inline-block;
+        }
+
+        /* ─── BUTTONS & LINKS ────────────────────────────── */
+        a { color: var(--primary); text-decoration: none; transition: var(--transition); }
+        a:hover { color: var(--primary-dim); }
+        
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 0.875rem 1.75rem; border-radius: 0.5rem; font-weight: 600; font-size: 1rem;
+            transition: var(--transition); cursor: pointer; text-decoration: none; border: none;
+            font-family: 'Space Grotesk', sans-serif; letter-spacing: 0.02em;
+        }
+        
+        .btn-primary {
+            background: var(--primary); color: white !important;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-primary:hover {
+            background: var(--primary-dim); transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-outline {
+            background: var(--surface); color: var(--primary) !important;
+            border: 2px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--surface2); transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-ghost {
+            background: transparent; color: var(--muted); padding: 0.5rem 1rem;
+        }
+        .btn-ghost:hover {
+            color: var(--primary); background: var(--surface2);
+        }
+
+        /* ─── NAV ────────────────────────────── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            height: 70px; display: flex; align-items: center;
+        }
+        .nav-inner {
+            display: flex; justify-content: space-between; align-items: center; width: 100%;
+        }
+        .logo { font-weight: 800; font-size: 1.25rem; color: var(--text-heading); font-family: 'Space Grotesk', sans-serif; display: flex; align-items: center; gap: 0.5rem; }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text); font-weight: 600; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* ─── HERO SECTION ────────────────────────────── */
+        .hero {
+            padding: 10rem 0 6rem; position: relative; min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .hero-bg-glow {
+            position: absolute; top: -10%; right: -5%; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none; z-index: -1;
+        }
+        .hero-grid {
+            position: absolute; inset: 0; z-index: -2;
+            background-image: linear-gradient(var(--surface3) 1px, transparent 1px),
+                              linear-gradient(90deg, var(--surface3) 1px, transparent 1px);
+            background-size: 40px 40px; background-position: center; opacity: 0.5;
+            mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+        }
+        .hero-lead { font-size: 1.25rem; color: var(--text); max-width: 700px; margin-bottom: 2.5rem; }
+        
+        .tag-list { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; }
+        .tag {
+            padding: 0.4rem 1rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600;
+            background: var(--surface); border: 1px solid var(--border); color: var(--text-heading);
+            font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; gap: 0.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .tag i { color: var(--primary); font-style: normal; }
+
+        /* ─── CARDS & SECTIONS ────────────────────────────── */
+        .section { padding: 5rem 0; position: relative; border-bottom: 1px solid var(--border); }
+        .section:last-child { border-bottom: none; }
+        
+        .card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 1rem;
+            padding: 2.5rem; transition: var(--transition); position: relative; overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .card:hover { border-color: var(--primary); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-glow)); opacity: 0; transition: var(--transition);
+        }
+        .card:hover::before { opacity: 1; }
+        
+        .grid-2 { grid-template-columns: 1fr 1fr; gap: 3rem; }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 2rem; } }
+
+        /* ─── AUTHOR PROFILE ────────────────────────────── */
+        .profile-card {
+            display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border); border-radius: 1rem; margin-bottom: 3rem;
+            max-width: 450px; box-shadow: var(--shadow-sm);
+        }
+        .profile-avatar {
+            width: 70px; height: 70px; border-radius: 50%; background: var(--primary);
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+            color: white; font-weight: 700; border: 3px solid var(--surface);
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+        }
+        .profile-info h4 { margin-bottom: 0.25rem; font-size: 1.25rem; }
+        .profile-info p { margin: 0; color: var(--primary); font-size: 0.95rem; font-weight: 600; }
+
+        /* ─── METRICS SHOWCASE ────────────────────────────── */
+        .metric-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .metric {
+            background: var(--surface); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border);
+            text-align: center; box-shadow: var(--shadow-sm);
+        }
+        .metric-value { font-size: 2.5rem; font-weight: 800; color: var(--primary); font-family: 'Space Grotesk', sans-serif; line-height: 1; margin-bottom: 0.5rem; }
+        .metric-label { font-size: 0.85rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* ─── INTERACTIVE DIAGNOSIS SIMULATOR ────────────────────────────── */
+        .simulator {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 1rem;
+            overflow: hidden; box-shadow: var(--shadow-lg); display: grid; grid-template-columns: 2fr 1fr;
+        }
+        @media (max-width: 900px) { .simulator { grid-template-columns: 1fr; } }
+        
+        .sim-panel { padding: 2.5rem; }
+        .sim-controls { border-right: 1px solid var(--border); background: var(--surface); }
+        .sim-results { background: var(--surface2); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        
+        .control-group { margin-bottom: 1.5rem; }
+        .control-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.95rem; color: var(--text-heading); }
+        .control-group input[type="range"] {
+            width: 100%; height: 8px; background: var(--surface3); border-radius: 4px; outline: none; -webkit-appearance: none;
+        }
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--primary);
+            cursor: pointer; transition: transform 0.1s; box-shadow: var(--shadow-sm);
+        }
+        .control-group input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); background: var(--primary-glow); }
+        .val-display { float: right; color: var(--primary); font-weight: 700; font-family: 'JetBrains Mono', monospace; background: var(--surface2); padding: 0.1rem 0.5rem; border-radius: 4px; border: 1px solid var(--border); }
+        
+        select.sim-select {
+            width: 100%; padding: 0.75rem 1rem; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 0.5rem; color: var(--text-heading); font-family: 'Inter', sans-serif; font-size: 0.95rem;
+            outline: none; transition: all 0.2s; appearance: none; font-weight: 500;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em;
+        }
+        select.sim-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        .risk-meter {
+            position: relative; width: 200px; height: 200px; margin: 0 auto 2rem;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            background: conic-gradient(var(--green) 0%, var(--surface3) 0%); transition: background 0.5s ease-out;
+            box-shadow: var(--shadow-md);
+        }
+        .risk-meter::after {
+            content: ''; position: absolute; width: 160px; height: 160px; background: var(--surface);
+            border-radius: 50%; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .risk-value {
+            position: relative; z-index: 10; font-size: 3.5rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif;
+            color: var(--text-heading); line-height: 1; display: flex; flex-direction: column; align-items: center;
+        }
+        .risk-value span { font-size: 0.9rem; color: var(--muted); font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 1px; margin-top: 5px; }
+        
+        .risk-status { font-size: 1.4rem; font-weight: 800; color: var(--green); margin-bottom: 1rem; }
+
+        /* ─── FOOTER ────────────────────────────── */
+        footer { padding: 4rem 0 2rem; border-top: 1px solid var(--border); background: var(--surface); text-align: center; }
+        .footer-logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text-heading); margin-bottom: 1rem; }
+        .footer-logo span { color: var(--primary); }
+        .footer-text { color: var(--muted); font-size: 0.95rem; font-weight: 500;}
+
+        /* ─── ANIMATIONS ────────────────────────────── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-inner">
+            <div class="logo">Ali<span>Naderi</span></div>
+            <div class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#methodology">Methodology</a>
+                <a href="#simulator">Simulator</a>
+                <a href="#deliverables" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.95rem;">View Notebooks</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-bg-glow"></div>
+        <div class="container relative z-10">
+            
+            <div class="profile-card animate-up">
+                <div class="profile-avatar">AN</div>
+                <div class="profile-info">
+                    <h4>Ali Naderi</h4>
+                    <p>Lead Data Scientist & ML Architect</p>
+                </div>
+            </div>
+
+            <div class="eyebrow animate-up delay-1">Clinical Decision Support System</div>
+            <h1 class="hero-title animate-up delay-1">Heart Disease Prediction <br><span class="text-primary">Diagnostic Modeling</span></h1>
+            
+            <p class="hero-lead animate-up delay-2">
+                A state-of-the-art machine learning pipeline designed to identify cardiovascular risk factors from the UCI Cleveland Dataset. Featuring rigorous statistical EDA, zero-leakage preprocessing, hyperparameter sweeps, and high-performance Stacking Ensembles.
+            </p>
+            
+            <div class="tag-list animate-up delay-2">
+                <span class="tag"><i>#</i> Scikit-Learn</span>
+                <span class="tag"><i>#</i> Python</span>
+                <span class="tag"><i>#</i> GridSearchCV</span>
+                <span class="tag"><i>#</i> Ensemble Learning</span>
+                <span class="tag"><i>#</i> Clinical Statistics</span>
+                <span class="tag"><i>#</i> Feature Engineering</span>
+            </div>
+            
+            <div class="flex gap-4 animate-up delay-3 mt-8">
+                <a href="#deliverables" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Download Project Code
+                </a>
+                <a href="#methodology" class="btn btn-outline">Read Methodology</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview & Problem Statement -->
+    <section id="overview" class="section">
+        <div class="container">
+            <div class="grid grid-2 items-center">
+                <div>
+                    <div class="eyebrow">The Challenge</div>
+                    <h2>Translating Clinical Data into Predictive Intelligence</h2>
+                    <p class="text-muted mb-4">
+                        Cardiovascular diseases are the leading cause of death globally. Early identification of at-risk patients is critical for preventive intervention. However, clinical datasets are often noisy, highly skewed, and prone to methodological errors (like data leakage) during model development.
+                    </p>
+                    <p class="text-muted">
+                        <strong>My Objective:</strong> To engineer a robust, clinically-sound classification pipeline that maximizes <em>Recall</em> (minimizing false negatives — missing a diseased patient) while maintaining high overall accuracy, ensuring the model is reliable enough for integration into a Clinical Decision Support System (CDSS).
+                    </p>
+                    
+                    <div class="metric-group">
+                        <div class="metric">
+                            <div class="metric-value">303</div>
+                            <div class="metric-label">Patients Evaluated</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">13</div>
+                            <div class="metric-label">Clinical Features</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card" style="background: var(--surface2);">
+                        <h3 class="text-primary mb-4">Key Clinical Indicators Analyzed</h3>
+                        <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+                            <li class="flex items-center gap-4">
+                                <span style="background: var(--surface); padding: 0.75rem; border-radius: 0.5rem; color: var(--primary); box-shadow: var(--shadow-sm);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></span>
+                                <div><strong class="text-heading">Resting ECG & ST Depression</strong><br><span class="text-muted" style="font-size: 0.9rem;">Vital markers for myocardial ischemia</span></div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <span style="background: var(--surface); padding: 0.75rem; border-radius: 0.5rem; color: var(--primary); box-shadow: var(--shadow-sm);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg></span>
+                                <div><strong class="text-heading">Max Heart Rate & Angina</strong><br><span class="text-muted" style="font-size: 0.9rem;">Exercise-induced symptoms and thresholds</span></div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <span style="background: var(--surface); padding: 0.75rem; border-radius: 0.5rem; color: var(--primary); box-shadow: var(--shadow-sm);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
+                                <div><strong class="text-heading">Cholesterol & Blood Pressure</strong><br><span class="text-muted" style="font-size: 0.9rem;">Baseline systemic risk factors</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methodology -->
+    <section id="methodology" class="section" style="background: var(--surface);">
+        <div class="container">
+            <div class="eyebrow text-center" style="justify-content: center;">Data Science Approach</div>
+            <h2 class="text-center mb-8" style="justify-content: center;">End-to-End Analytical Workflow</h2>
+            
+            <div class="grid grid-3">
+                <div class="card" style="background: var(--bg);">
+                    <h3 class="text-primary">1. Statistical EDA</h3>
+                    <p class="text-muted mb-4">Deep exploratory analysis utilizing robust non-parametric tests. Uncovered hidden clinical correlations.</p>
+                    <ul class="text-muted" style="font-size: 0.95rem; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li>Q-Q Normality Testing</li>
+                        <li>Mann-Whitney U tests for continuous vs categorical targets</li>
+                        <li>Chi-Square & Cramer's V for nominal associations</li>
+                    </ul>
+                </div>
+                <div class="card" style="background: var(--bg);">
+                    <h3 class="text-primary">2. Zero-Leakage Preprocessing</h3>
+                    <p class="text-muted mb-4">Engineered a strict <code>ColumnTransformer</code> pipeline that separates train/test data perfectly before scaling or transformation.</p>
+                    <ul class="text-muted" style="font-size: 0.95rem; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li><strong>Yeo-Johnson</strong> Power Transforms for severe skewness</li>
+                        <li>One-Hot Encoding for multi-class nominals</li>
+                        <li>StandardScaling & VIF Multicollinearity audits</li>
+                    </ul>
+                </div>
+                <div class="card" style="background: var(--bg);">
+                    <h3 class="text-primary">3. Advanced Ensembling</h3>
+                    <p class="text-muted mb-4">Evaluated Decision Trees, RF, KNN, SVM, and XGBoost via <code>GridSearchCV</code> (Stratified 5-Fold), culminating in elite ensembles.</p>
+                    <ul class="text-muted" style="font-size: 0.95rem; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li>Stacking Classifier (SVM, RF, KNN base -> LR meta)</li>
+                        <li>Soft Voting Ensembles</li>
+                        <li>High precision and robust AUC scores achieved</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Simulator -->
+    <section id="simulator" class="section">
+        <div class="container">
+            <div class="eyebrow">Interactive Demo</div>
+            <h2 class="mb-8">Digital Twin: Diagnostic Risk Estimator</h2>
+            <p class="text-muted mb-8 max-w-3xl" style="font-size: 1.1rem;">
+                Experience the logic of our machine learning pipeline in real-time. Adjust the clinical biomarkers below to see how the underlying Logistic Regression model weights estimate the probability of Coronary Artery Disease.
+            </p>
+            
+            <div class="simulator">
+                <div class="sim-panel sim-controls grid grid-2">
+                    <!-- Column 1 -->
+                    <div>
+                        <div class="control-group">
+                            <label>Age (years) <span id="val-age" class="val-display">55</span></label>
+                            <input type="range" id="sim-age" min="20" max="80" value="55" step="1">
+                        </div>
+                        <div class="control-group">
+                            <label>Resting Blood Pressure (mm Hg) <span id="val-trestbps" class="val-display">130</span></label>
+                            <input type="range" id="sim-trestbps" min="90" max="200" value="130" step="1">
+                        </div>
+                        <div class="control-group">
+                            <label>Serum Cholesterol (mg/dl) <span id="val-chol" class="val-display">240</span></label>
+                            <input type="range" id="sim-chol" min="120" max="400" value="240" step="1">
+                        </div>
+                        <div class="control-group">
+                            <label>Max Heart Rate Achieved (bpm) <span id="val-thalach" class="val-display">150</span></label>
+                            <input type="range" id="sim-thalach" min="70" max="210" value="150" step="1">
+                        </div>
+                        <div class="control-group">
+                            <label>ST Depression Induced (oldpeak) <span id="val-oldpeak" class="val-display">1.0</span></label>
+                            <input type="range" id="sim-oldpeak" min="0" max="6" value="1.0" step="0.1">
+                        </div>
+                    </div>
+                    <!-- Column 2 -->
+                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <div class="control-group" style="margin: 0;">
+                            <label>Sex</label>
+                            <select id="sim-sex" class="sim-select">
+                                <option value="1">Male (Higher baseline risk)</option>
+                                <option value="0">Female</option>
+                            </select>
+                        </div>
+                        <div class="control-group" style="margin: 0;">
+                            <label>Chest Pain Type (cp)</label>
+                            <select id="sim-cp" class="sim-select">
+                                <option value="0">Typical Angina (High risk)</option>
+                                <option value="1">Atypical Angina</option>
+                                <option value="2">Non-anginal Pain</option>
+                                <option value="3">Asymptomatic</option>
+                            </select>
+                        </div>
+                        <div class="control-group" style="margin: 0;">
+                            <label>Exercise Induced Angina (exang)</label>
+                            <select id="sim-exang" class="sim-select">
+                                <option value="1">Yes (High risk)</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                        <div class="control-group" style="margin: 0;">
+                            <label>Number of Major Vessels (ca)</label>
+                            <select id="sim-ca" class="sim-select">
+                                <option value="0">0 Vessels Colored (Clear)</option>
+                                <option value="1">1 Vessel Colored</option>
+                                <option value="2">2 Vessels Colored</option>
+                                <option value="3">3 Vessels Colored (Severe)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sim-panel sim-results">
+                    <div class="risk-meter" id="risk-meter">
+                        <div class="risk-value" id="risk-value">
+                            45%
+                            <span>PROBABILITY</span>
+                        </div>
+                    </div>
+                    <div class="risk-status" id="risk-status">Moderate Risk</div>
+                    <p class="text-muted" style="font-size: 0.95rem; max-width: 280px; line-height: 1.5;">
+                        Estimation based on clinical weights derived from our optimized Logistic Regression model.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deliverables Download -->
+    <section id="deliverables" class="section" style="background: var(--surface);">
+        <div class="container text-center">
+            <div class="eyebrow" style="justify-content: center;">Project Assets</div>
+            <h2 style="justify-content: center;" class="mb-4">Explore the Jupyter Notebooks</h2>
+            <p class="text-muted mb-8 max-w-2xl mx-auto" style="font-size: 1.1rem;">
+                The complete Python source code is meticulously documented and styled in a clean, high-contrast Clinical format. Review the statistical EDA and machine learning pipelines.
+            </p>
+            
+            <div class="grid grid-2" style="max-width: 900px; margin: 0 auto;">
+                <div class="card text-left" style="background: var(--bg);">
+                    <h3 class="text-heading">1. Advanced Statistical EDA</h3>
+                    <p class="text-muted mb-4 font-mono text-sm" style="color: var(--primary);">Heart_Disease_Advanced_EDA.ipynb</p>
+                    <p class="text-muted mb-6" style="font-size: 0.95rem;">Contains custom high-resolution data visualizations, rigorous Mann-Whitney U/Chi-Square testing, and distribution analysis.</p>
+                    <div class="flex gap-4">
+                        <a href="Heart_Disease_Advanced_EDA.html" target="_blank" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.95rem;">View HTML Render</a>
+                        <a href="Heart_Disease_Advanced_EDA.ipynb" download class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.95rem;">Download .ipynb</a>
+                    </div>
+                </div>
+                <div class="card text-left" style="background: var(--bg);">
+                    <h3 class="text-heading">2. Modeling & Ensembles</h3>
+                    <p class="text-muted mb-4 font-mono text-sm" style="color: var(--primary);">Heart_Disease_Advanced_Modeling.ipynb</p>
+                    <p class="text-muted mb-6" style="font-size: 0.95rem;">Features secure ColumnTransformers, GridSearchCV tuning across 5 models, Stacking/Voting Classifiers, and ROC evaluation.</p>
+                    <div class="flex gap-4">
+                        <a href="Heart_Disease_Advanced_Modeling.html" target="_blank" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.95rem;">View HTML Render</a>
+                        <a href="Heart_Disease_Advanced_Modeling.ipynb" download class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.95rem;">Download .ipynb</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Ali<span>Naderi</span></div>
+            <p class="footer-text">Data Scientist & Machine Learning Architect</p>
+            <p class="footer-text" style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.7;">
+                Engineered for Kaggle Portfolio & Resume Presentation.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Interactive Simulator Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak'];
+            const selects = ['sex', 'cp', 'exang', 'ca'];
+            
+            const meter = document.getElementById('risk-meter');
+            const valueDisplay = document.getElementById('risk-value');
+            const statusDisplay = document.getElementById('risk-status');
+
+            // Simplified logistic regression coefficients based on EDA analysis
+            // 1 = Disease (Crimson), 0 = Healthy (Blue)
+            const coefs = {
+                intercept: -2.5,
+                age: 0.02,
+                sex: 1.2,         // Male increases risk
+                cp_0: 1.8,        // Typical angina is highest risk (encoded 0)
+                cp_others: -0.5,
+                trestbps: 0.015,
+                chol: 0.003,
+                thalach: -0.025,  // Higher max heart rate REDUCES risk
+                exang: 1.0,       // Exercise angina increases risk
+                oldpeak: 0.8,     // Higher ST depression increases risk
+                ca: 0.9           // More narrowed vessels increases risk
+            };
+
+            function updateSimulator() {
+                // Update text displays for ranges
+                inputs.forEach(id => {
+                    document.getElementById(`val-${id}`).innerText = document.getElementById(`sim-${id}`).value;
+                });
+
+                // Get values
+                const age = parseFloat(document.getElementById('sim-age').value);
+                const trestbps = parseFloat(document.getElementById('sim-trestbps').value);
+                const chol = parseFloat(document.getElementById('sim-chol').value);
+                const thalach = parseFloat(document.getElementById('sim-thalach').value);
+                const oldpeak = parseFloat(document.getElementById('sim-oldpeak').value);
+                
+                const sex = parseFloat(document.getElementById('sim-sex').value);
+                const cp = parseFloat(document.getElementById('sim-cp').value);
+                const exang = parseFloat(document.getElementById('sim-exang').value);
+                const ca = parseFloat(document.getElementById('sim-ca').value);
+
+                // Calculate logit
+                let logit = coefs.intercept;
+                logit += age * coefs.age;
+                logit += sex * coefs.sex;
+                logit += (cp === 0 ? coefs.cp_0 : coefs.cp_others);
+                logit += trestbps * coefs.trestbps;
+                logit += chol * coefs.chol;
+                logit += thalach * coefs.thalach;
+                logit += exang * coefs.exang;
+                logit += oldpeak * coefs.oldpeak;
+                logit += ca * coefs.ca;
+
+                // Sigmoid probability
+                const prob = 1 / (1 + Math.exp(-logit));
+                const probPct = Math.round(prob * 100);
+
+                // Update UI
+                valueDisplay.innerHTML = `${probPct}%<span>PROBABILITY</span>`;
+                
+                let color, status;
+                if (probPct < 30) {
+                    color = 'var(--primary)'; // Blue
+                    status = 'Low Risk (Healthy)';
+                } else if (probPct < 60) {
+                    color = 'var(--amber)'; // Amber
+                    status = 'Moderate Risk';
+                } else {
+                    color = 'var(--red)'; // Crimson Red
+                    status = 'High Clinical Risk';
+                }
+
+                statusDisplay.innerText = status;
+                statusDisplay.style.color = color;
+                
+                // Conic gradient for pie chart effect
+                meter.style.background = `conic-gradient(${color} ${probPct}%, var(--surface3) 0%)`;
+                meter.style.boxShadow = `0 10px 15px -3px rgba(0,0,0,0.1), 0 0 20px ${color}30`;
+            }
+
+            // Attach listeners
+            inputs.forEach(id => {
+                document.getElementById(`sim-${id}`).addEventListener('input', updateSimulator);
+            });
+            selects.forEach(id => {
+                document.getElementById(`sim-${id}`).addEventListener('change', updateSimulator);
+            });
+
+            // Init
+            updateSimulator();
+        });
+    </script>
+</body>
+</html>

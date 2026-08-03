@@ -1047,3 +1047,48 @@ h1 em, h2 em {
   body { background: #fff; color: #000; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ---------- About portrait ---------- */
+.about-portrait {
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 30px;
+  border: var(--card-border);
+  box-shadow: var(--card-depth-3), var(--card-inset);
+  transform: rotate(-1.4deg);
+  transition: transform .45s var(--ease), box-shadow .45s var(--ease);
+}
+
+.about-portrait:hover {
+  transform: rotate(0deg) translateY(-6px);
+  box-shadow: var(--card-depth-4), var(--card-inset);
+}
+
+.about-portrait img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.about-portrait::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: var(--r-lg);
+  background: linear-gradient(155deg, rgba(255,255,255,.18) 0%, transparent 40%, rgba(242,102,79,.16) 100%);
+}
+
+[data-theme="dark"] .about-portrait::after {
+  background: linear-gradient(155deg, rgba(255,255,255,.05) 0%, transparent 40%, rgba(255,128,105,.14) 100%);
+}
+
+@media (max-width: 980px) {
+  .about-portrait { max-width: 420px; margin-inline: auto; }
+}
+
+@media (max-width: 760px) {
+  .about-portrait { transform: none; }
+  .about-portrait:hover { transform: translateY(-4px); }
+}

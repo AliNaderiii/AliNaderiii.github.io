@@ -1,8 +1,11 @@
 # alinaderiii.github.io
+
 Personal portfolio of **Ali Naderi** - AI Research Engineer and Data Scientist, specialising in physics-informed deep learning, signal processing, and computer vision.
+
 [![Live Site](https://img.shields.io/badge/Live-alinaderiii.github.io-E85D4A?style=for-the-badge&logo=googlechrome&logoColor=white)](https://alinaderiii.github.io/)
 [![Published](https://img.shields.io/badge/Published-Complexity%20Wiley%202025-6C4AB6?style=for-the-badge&logo=bookstack&logoColor=white)](https://doi.org/10.1155/cplx/1644859)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+
 ## About
 A single-page portfolio built with vanilla HTML, CSS and JavaScript. No build step, no framework, no dependencies. It presents peer-reviewed research, seven engineering case studies, and links to live interactive dashboards.
 **Design:** warm light theme by default with a persistent dark-mode toggle, built on a cream, coral, gold, purple and navy palette. Fully responsive, honours `prefers-reduced-motion`.

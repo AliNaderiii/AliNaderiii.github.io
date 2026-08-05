@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Farming Crop Yield Analysis &amp; IoT Disease System | Lead Data Scientist Portfolio</title>
+    <title>Smart Farming Crop Yield Analysis | A Negative Result, Reported</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <style>
@@ -671,11 +671,11 @@
             <div class="profile-info">
                 <div class="profile-avatar">AN</div>
                 <div>
-                    <div class="profile-title">Lead Data Scientist &amp; Agritech ML Architect</div>
-                    <div class="profile-subtitle">Precision Agriculture Research &amp; Deployments</div>
+                    <div class="profile-title"> Ali Naderi &mdash; Data Scientist</div>
+                    <div class="profile-subtitle">Higher National Diploma in Data Science &middot; coursework project</div>
                 </div>
             </div>
-            <div class="profile-badge">PROJECT AUTHOR &amp; LEAD: Ali Naderi</div>
+            <div class="profile-badge">Dataset: Kaggle / Atharva Soundankar (Apache 2.0)</div>
         </div>
     </div>
 
@@ -801,13 +801,23 @@
                 <div class="grid-2" style="margin-bottom: 32px;">
                     <div class="metric-card">
                         <div class="metric-label">Ridge Regressor R²</div>
-                        <div class="metric-val negative">-0.0956</div>
-                        <div class="metric-desc">Test RMSE: 1230.05 | MAE: 1058.42</div>
+                        <div class="metric-val negative">-0.0811</div>
+                        <div class="metric-desc">Test RMSE: 1221.91 | MAE: 1091.61</div>
                     </div>
                     <div class="metric-card">
                         <div class="metric-label">XGBoost Tuned R²</div>
-                        <div class="metric-val negative">-0.2580</div>
-                        <div class="metric-desc">Test RMSE: 1318.11 | MAE: 1079.20</div>
+                        <div class="metric-val negative">-0.0587</div>
+                        <div class="metric-desc">Test RMSE: 1209.19 | MAE: 1071.75</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Random Forest Tuned R&sup2;</div>
+                        <div class="metric-val negative">-0.0439</div>
+                        <div class="metric-desc">Test RMSE: 1200.68 | MAE: 1065.93</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Disease Classifier</div>
+                        <div class="metric-val negative">25.3%</div>
+                        <div class="metric-desc">XGBoost, 4 classes | Chance = 25.0%</div>
                     </div>
                 </div>
 
@@ -834,8 +844,10 @@
                     <h2 class="card-title">Production Deployment Roadmap</h2>
                 </div>
                 <p class="section-text">
-                    In a production environment, models must be packaged, served, and monitored reliably. Below is our
-                    proposed architecture to serve the XGBoost regressor pipeline:
+                    A design exercise, included because the engineering is reusable even when the model is not.
+                    <strong>Nothing in this project should be served:</strong> all three regressors lose to predicting
+                    the mean, so there is no model here worth deploying. The steps below describe how the pipeline
+                    <em>would</em> be packaged if it had predictive value.
                 </p>
 
                 <div class="roadmap-container">
@@ -874,8 +886,7 @@
             <div class="calc-container">
                 <div class="calc-header">
                     <h2 class="calc-title">Digital Twin Crop Yield Estimator</h2>
-                    <p class="calc-desc">Enter environmental parameters below. The estimator implements the exact
-                        coefficients learned by our Ridge regressor model pipeline.</p>
+                    <p class="calc-desc">A demonstration widget, not a forecasting tool. The offsets below are illustrative values in the spirit of the Ridge fit; they are not read from the serialised pipeline, and because the underlying features are statistically independent of yield, any such coefficients are noise. Change the inputs and watch the output barely move &mdash; that is the point.</p>
                 </div>
 
                 <div class="calc-grid">
@@ -951,9 +962,7 @@
                     <div class="result-label">Predicted Crop Yield</div>
                     <div class="result-val" id="pred_result">4212.50 kg/ha</div>
                     <p class="result-notes">
-                        Note: Due to variable independence in this simulated dataset, predictions converge around the
-                        global mean of ~4,000 kg/ha, adjusted by the marginal coefficients (e.g., Soybean: +256,
-                        Moderate Disease: -84) learned by the Ridge regressor model pipeline.
+    Note: these Ridge coefficients are fitted to features that are statistically independent of the target, which means <strong>they are noise</strong>. Predictions converge on the global mean of ~4,000 kg/ha with small arbitrary adjustments (e.g. Soybean: +256, Moderate Disease: -84). The adjustments carry no agronomic meaning and should not be read as marginal effects.
                     </p>
                 </div>
             </div>
